@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Petshop - Gestão</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+    }
+    
+    /* Header */
+    header {
+      background-color: #008000;
+      padding: 15px;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+    }
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-size: 18px;
+      position: relative;
+    }
+    nav a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      background-color: white;
+      left: 0;
+      bottom: -5px;
+      transition: width 0.3s ease-in-out;
+    }
+    nav a:hover::after {
+      width: 100%;
+    }
+    
+    /* Aside */
+    aside {
+      width: 20%;
+      background-color: #e0ffe0;
+      padding: 15px;
+      height: 100vh;
+      float: left;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease-in-out;
+    }
+    aside a {
+      display: block;
+      color: #006400;
+      margin-bottom: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s ease-in-out;
+    }
+    aside a:hover {
+      color: #32cd32;
+    }
+    
+    /* Main */
+    main {
+      margin-left: 20%;
+      padding: 20px;
+      background-color: white;
+      min-height: 100vh;
+    }
+    
+    /* Marquee */
+    .marquee-container {
+      background-color: #e0ffe0;
+      margin-top: 20px;
+      padding: 10px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .marquee {
+      width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      box-sizing: border-box;
+    }
+    .marquee img {
+      display: inline-block;
+      width: 150px;
+      height: 100px;
+      margin-right: 20px;
+      transition: transform 0.5s ease-in-out;
+    }
+    .marquee img:hover {
+      transform: scale(1.1);
+    }
+    
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 50%;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Petshop Gestão</h1>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">Serviços</a>
+    <a href="#">Contato</a>
+  </nav>
+</header>
+
+<aside>
+  <a href="#" onclick="openModal('funcionarioModal')">Área do Funcionário</a>
+  <a href="financeiro.html" target="_blank">Financeiro</a>
+  <a href="#" onclick="openModal('administrativoModal')">Administrativo</a>
+  <a href="#">Área do Cliente</a>
+  
+  <!-- Modal para funcionário -->
+  <div id="funcionarioModal" class="modal">
+    <div class="modal-content">
+      <h2>Inserir dados do funcionário</h2>
+      <label for="funcionario">Selecione o funcionário:</label>
+      <select id="funcionario">
+        <option value="joao">João</option>
+        <option value="maria">Maria</option>
+        <option value="ana">Ana</option>
+      </select>
+      <br><br>
+      <label for="item">Item vendido:</label>
+      <input type="text" id="item" placeholder="Descrição do item">
+      <br><br>
+      <label for="valor">Valor:</label>
+      <input type="number" id="valor" placeholder="R$">
+      <br><br>
+      <button onclick="salvarDados()">Salvar</button>
+      <button onclick="closeModal('funcionarioModal')">Fechar</button>
+    </div>
+  </div>
+
+  <!-- Modal para administrativo -->
+  <div id="administrativoModal" class="modal">
+    <div class="modal-content">
+      <h2>Registro de Ponto e Comissão</h2>
+      <p>Funcionário: João</p>
+      <p>Comissão: <span id="comissao">10%</span></p>
+      <button onclick="calcularComissao(350)">Calcular Comissão (acima de R$ 300)</button>
+      <br><br>
+      <button onclick="closeModal('administrativoModal')">Fechar</button>
+    </div>
+  </div>
+</aside>
+
+<main>
+  <h2>Bem-vindo ao Sistema de Gestão do Petshop</h2>
+  <button onclick="buscarAnimais()">Buscar Animais Atendidos</button>
+  <ul id="listaAnimais"></ul>
+  
+  <div class="marquee-container">
+    <h3>Animais já atendidos:</h3>
+    <div class="marquee">
+      <img src="https://via.placeholder.com/150x100" alt="Animal 1">
+      <img src="https://via.placeholder.com/150x100" alt="Animal 2">
+      <img src="https://via.placeholder.com/150x100" alt="Animal 3">
+      <img src="https://via.placeholder.com/150x100" alt="Animal 4">
+      <img src="https://via.placeholder.com/150x100" alt="Animal 5">
+    </div>
+  </div>
+</main>
+
+<script>
+  function openModal(modalId) {
+    document.getElementById(modalId).style.display = 'flex';
+  }
+  
+  function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+  }
+
+  function salvarDados() {
+    const funcionario = document.getElementById('funcionario').value;
+    const item = document.getElementById('item').value;
+    const valor = document.getElementById('valor').value;
+    
+    // Armazenar os dados no localStorage
+    const dados = { funcionario, item, valor };
+    localStorage.setItem('vendaFuncionario', JSON.stringify(dados));
+    
+    alert('Dados salvos com sucesso!');
+    closeModal('funcionarioModal');
+  }
+  
+  function buscarAnimais() {
+    // Simulação de requisição a API com Promise
+    new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(['Cachorro - Rex', 'Gato - Mia', 'Pássaro - Azulão']);
+      }, 1000);
+    }).then((animais) => {
+      const listaAnimais = document.getElementById('listaAnimais');
+      listaAnimais.innerHTML = '';
+      animais.forEach(animal => {
+        const li = document.createElement('li');
+        li.textContent = animal;
+        listaAnimais.appendChild(li);
+      });
+    });
+  }
+
+  function calcularComissao(valor) {
+    let comissao = 10;
+    if (valor > 300) {
+      comissao = 15;
+    }
+    document.getElementById('comissao').textContent = `${comissao}%`;
+  }
+</script>
+
+</body>
+</html>

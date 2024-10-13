@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Financeiro - Petshop</title>
+  <link rel="stylesheet" href="CSS/styles.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      padding: 20px;
+    }
+    
+    h1 {
+      color: #008000;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    
+    th, td {
+      padding: 12px;
+      text-align: left;
+    }
+    
+    th {
+      background-color: #008000;
+      color: white;
+    }
+    
+    tr:nth-child(even) {
+      background-color: #e0ffe0;
+    }
+    
+    .total {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Relatório Financeiro</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Item Vendido</th>
+      <th>Valor</th>
+      <th>Descrição</th>
+      <th>Data</th>
+      <th>Vendedor</th>
+    </tr>
+  </thead>
+  <tbody id="tabelaFinanceiro">
+    <!-- Dados inseridos aqui -->
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="2" class="total">Total do Dia</td>
+      <td id="totalValor" class="total">R$ 0,00</td>
+    </tr>
+  </tfoot>
+</table>
+
+<a href="index.html"><button>voltar</button></a>
+
+<footer>
+  <p>© 2024 PetShop - Todos os direitos reservados.</p>
+</footer> 
+
+<script> 
+  document.addEventListener('DOMContentLoaded', () => {
+    const dados = JSON.parse(localStorage.getItem('vendaFuncionario'));
+    if (dados) {
+      const tabela = document.getElementById('tabelaFinanceiro');
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${dados.productName}</td>
+        <td>R$ ${dados.productPrice}</td>
+        <td>${dados.productDescription}</td>
+        <td>${dados.productDate}</td>
+        <td>${dados.productSeller}</td>
+      `;
+      tabela.appendChild(tr);
+      
+      // Calcular total
+      document.getElementById('totalValor').textContent = `R$ ${dados.productPrice}`;
+    }
+  });
+</script> 
+<script src="JS/script.js"></script>
+</body>
+</html>
